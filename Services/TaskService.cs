@@ -1,7 +1,9 @@
 ﻿
 using DotnetTask.Context;
 using DotnetTask.Model;
+using DotnetTask.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using System.Xml.Linq;
 
 namespace DotnetTask.Services
@@ -14,18 +16,17 @@ namespace DotnetTask.Services
             this.ctx = ctx;
         }
 
-        public async Task<MyTask> CreateTask(MyTask task)
+        public MyTask CreateTask(MyTask task)
         {
             if(task==null)
             {
                 throw new Exception();
             }
             ctx.Tasks.Add(task);
-            ctx.SaveChangesAsync();
+            ctx.SaveChanges();
             return task;
         }
-
-        public async Task<string> DeleteTask(int id)
+        public string DeleteTask(int id)
         {
             if(id==null)
             {
@@ -33,7 +34,7 @@ namespace DotnetTask.Services
             }
             MyTask task=GetTask(id);
             ctx.Tasks.Remove(task);
-            ctx.SaveChangesAsync();
+            ctx.SaveChanges();
             return "Data Deleted Successfully!!!";
         }
 
@@ -45,7 +46,7 @@ namespace DotnetTask.Services
 
         public MyTask GetTask(int id)
         {
-            MyTask task = ctx.Tasks.Where(val => val.Id == id).FirstOrDefault();
+            MyTask task = ctx.Tasks.Where(val => val.TaskId == id).FirstOrDefault();
             if (task==null)
             {
                 throw new Exception();
@@ -53,19 +54,17 @@ namespace DotnetTask.Services
             return task;
         }
 
-        public async Task<MyTask> UpdateTask(MyTask task)
+        
+        public MyTask UpdateTask(MyTask task)
         {
             if(task==null)
             {
                 throw new Exception();
             }
-            MyTask task1=GetTask(task.Id);
-            task1.Title=task.Title;
-            task1.Description=task.Description; 
-            task1.GetStatus=task.GetStatus;
-            ctx.Tasks.Update(task1);
-            ctx.SaveChangesAsync();
-            return task1;
+            
+            ctx.Tasks.Update(task);
+            ctx.SaveChanges();
+            return task;
         }
     }
 }

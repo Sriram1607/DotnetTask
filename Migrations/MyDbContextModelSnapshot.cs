@@ -33,7 +33,11 @@ namespace DotnetTask.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("GetStatus")
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TaskId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")

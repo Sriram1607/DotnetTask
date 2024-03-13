@@ -3,19 +3,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DotnetTask.ViewModel
 {
-    public enum Status
-    {
-        Pending,
-        Completed
-    }
     public class MyTaskVM
     {
         [Required]
-        public string TitleVM { get; set; }
+        public int TaskId { set; get; }
+        [Required]
+        public string Title { get; set; }
 
         [Required]
-        public string DescriptionVM { get; set; }
+        public string Description { get; set; }
         [Required]
-        public Status GetStatusVM { get; set; }
+        public Status Status { get; set; }
     }
 }

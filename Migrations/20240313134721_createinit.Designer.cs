@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DotnetTask.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20240313100740_createinit")]
+    [Migration("20240313134721_createinit")]
     partial class createinit
     {
         /// <inheritdoc />
@@ -36,7 +36,11 @@ namespace DotnetTask.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("GetStatus")
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TaskId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")

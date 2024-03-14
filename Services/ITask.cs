@@ -6,11 +6,11 @@ namespace DotnetTask.Services
 {
     public interface ITask
     {
-        MyTask CreateTask(MyTask task);
-        List<MyTask> GetAlltasks();
+        Task<MyTask> CreateTask(MyTask task);
+        Task<List<MyTask>> GetAllTasks();
 
-        MyTask GetTask(int id);
-        MyTask UpdateTask(MyTask task);
-        string DeleteTask(int id);
+        Task<MyTask> GetTask(int id);
+        Task<MyTask> UpdateTask(MyTask task);
+        Task<string> DeleteTask(int id);
     }
 }

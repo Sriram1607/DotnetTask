@@ -3,6 +3,7 @@ using DotnetTask.Context;
 using DotnetTask.Model;
 using DotnetTask.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using System.Xml.Linq;
 
@@ -16,46 +17,54 @@ namespace DotnetTask.Services
             this.ctx = ctx;
         }
 
-        public MyTask CreateTask(MyTask task)
+        public async Task<MyTask> CreateTask(MyTask task)
         {
-            if(task==null)
+            if (task == null)
             {
                 throw new Exception();
             }
+
             ctx.Tasks.Add(task);
-            ctx.SaveChanges();
+            await ctx.SaveChangesAsync();
+
             return task;
         }
-        public string DeleteTask(int id)
+        public async Task<string> DeleteTask(int id)
         {
             if(id==null)
             {
                 throw new Exception();
             }
-            MyTask task=GetTask(id);
+            MyTask task=await GetTask(id);
             ctx.Tasks.Remove(task);
-            ctx.SaveChanges();
+            ctx.SaveChangesAsync();
             return "Data Deleted Successfully!!!";
         }
+        
+        private List<MyTask> allTasks;
 
-        public List<MyTask> GetAlltasks()
+        public async Task<List<MyTask>> GetAllTasks()
         {
-            List<MyTask> AllTasks=ctx.Tasks.ToList();
-            return AllTasks;
+            await Task.Run(() =>
+            {
+                allTasks = ctx.Tasks.ToList();
+            });
+            return allTasks;
+
         }
 
-        public MyTask GetTask(int id)
+        public async Task<MyTask> GetTask(int id)
         {
-            MyTask task = ctx.Tasks.Where(val => val.TaskId == id).FirstOrDefault();
-            if (task==null)
+            MyTask task = await ctx.Tasks.FirstOrDefaultAsync(val => val.TaskId == id);
+            if (task == null)
             {
                 throw new Exception();
             }
             return task;
         }
 
-        
-        public MyTask UpdateTask(MyTask task)
+
+        public async Task<MyTask> UpdateTask(MyTask task)
         {
             if(task==null)
             {
@@ -63,8 +72,10 @@ namespace DotnetTask.Services
             }
             
             ctx.Tasks.Update(task);
-            ctx.SaveChanges();
+            await ctx.SaveChangesAsync();
             return task;
         }
+
+      
     }
 }

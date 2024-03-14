@@ -17,7 +17,7 @@ namespace DotnetTask.Controllers
             this.taskservice = taskservice;
         }
         [HttpPost]
-        public IActionResult CreateTask(MyTaskVM myTaskVM)
+        public async Task<IActionResult> CreateTask(MyTaskVM myTaskVM)
         {
             try
             {
@@ -28,7 +28,7 @@ namespace DotnetTask.Controllers
                     task.Title = myTaskVM.Title;
                     task.Description = myTaskVM.Description;
                     task.Status = myTaskVM.Status;
-                    MyTask createdtask = taskservice.CreateTask(task);
+                    MyTask createdtask =  await taskservice.CreateTask(task);
                     return Ok(createdtask);
                 }
                 else
@@ -45,11 +45,11 @@ namespace DotnetTask.Controllers
 
 
         [HttpGet]
-        public IActionResult GetAllTasks()
+        public async Task<IActionResult> GetAllTasks()
         {
             try
             {
-                var tasks = taskservice.GetAlltasks();
+                var tasks = await taskservice.GetAllTasks();
                 return Ok(tasks);
             }
             catch (Exception ex)
@@ -61,11 +61,11 @@ namespace DotnetTask.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetTask(int id)
+        public async Task<IActionResult> GetTask(int id)
         {
             try
             {
-                var task = taskservice.GetTask(id);
+                var task = await taskservice.GetTask(id);
                 if(task==null)
                 {
                     return NotFound();
@@ -81,13 +81,13 @@ namespace DotnetTask.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateTask(MyTaskVM myTaskVM,int Id)
+        public async Task<IActionResult> UpdateTask(MyTaskVM myTaskVM,int Id)
         {
             try
             {
                 if(ModelState.IsValid)
                 {
-                    var updatetask = taskservice.GetTask(Id);
+                    var updatetask = await taskservice.GetTask(Id);
                     updatetask.Title = myTaskVM.Title;  
                     updatetask.Description = myTaskVM.Description;
                     updatetask.Status = myTaskVM.Status;
@@ -105,16 +105,15 @@ namespace DotnetTask.Controllers
                 Console.WriteLine("Error Occured" + ex.Message);
                 return StatusCode(StatusCodes.Status404NotFound);
             }
-
         }
 
         [HttpDelete]
 
-        public IActionResult DeleteTask(int id)
+        public async Task<IActionResult> DeleteTask(int id)
         {
             try
             {
-              string message=taskservice.DeleteTask(id);
+              string message= await taskservice.DeleteTask(id);
                 return Ok(message);
 
             }
